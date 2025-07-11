@@ -13,8 +13,11 @@ Route::prefix('v1')->group(function () {
     Route::controller(AuthController::class)->prefix('user')->group(function () {
         Route::post('register', 'register')->name('user.register');
         Route::post('login', 'login')->name('user.login');
-        Route::post('reset', 'reset')->name('user.reset');
-        Route::middleware(['auth:sanctum'])->get('', 'index')->name('user.index');
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::get('', 'index')->name('user.index');
+            Route::patch('', 'update')->name('user.update');
+            Route::delete('', 'destroy')->name('user.delete');
+        });
     });
 
     Route::prefix('password')->group(function () {

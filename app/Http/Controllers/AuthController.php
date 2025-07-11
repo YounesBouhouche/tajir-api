@@ -67,8 +67,18 @@ class AuthController extends BaseController
         );
     }
 
-    public function reset(Request $request)
+    public function update(Request $request)
     {
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
 
+        // Update
+        Auth::user()->update($validator->getData());
+        return $this->sendResponse(UserResource::make(Auth::user()));
     }
 }
