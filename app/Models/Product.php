@@ -45,4 +45,13 @@ class Product extends Model
     {
         return $this->user_id === $user->id;
     }
+    public function cart(): BelongsToMany
+    {
+        return $this->belongsToMany(Cart::class);
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class);
+    }
 }

@@ -2,64 +2,99 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartResource;
+use App\Http\Resources\OrderResource;
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
-class CartController extends Controller
+class CartController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $cart = Cart::whereBelongsTo(Auth::user());
+        if (!isset($cart))
+            return $this->sendError('Not found');
+        return $this->sendResponse(CartResource::make($cart));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function add(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'items' => 'required|array|min:1',
+            'items.*.product' => 'required|int',
+            'items.*.variant' => 'required|int',
+            'items.*.quantity' => 'required|int',
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
+
+        $items = $validator->getData()['items'];
+        $nonExistingItems = array_filter($items, fn($item) => !Product::exists($item['product']));
+        if (!empty($nonExistingItems))
+            return $this->sendError(
+                'Some products does not exist',
+                [
+                    'ids' => implode(',', array_map(fn($item) => $item['product'], $nonExistingItems))
+                ]
+            );
+
+        $cart = Auth::user()->getCart();
+        foreach ($items as $item) {
+            $cart->products()->attach($item['product'], Arr::only($item, ['variant', 'quantity']));
+        }
+
+        return $this->sendResponse(CartResource::make($cart), code: 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function remove(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'items' => 'required|array|min:1',
+            'items.*' => 'int',
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
+
+        $cart = Auth::user()->cart;
+
+        if (!isset($cart))
+            return $this->sendError('Not found');
+
+        Auth::user()->cart->products()->detach($validator->getData()['items']);
+        return $this->sendResponse(CartResource::make($cart));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cart $cart)
+    public function destroy()
     {
-        //
+        Auth::user()->cart->products()->detach();
+        Auth::user()->cart->delete();
+        return $this->sendResponse('Done');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cart $cart)
+    public function checkout()
     {
-        //
-    }
+        // Check for cart existence
+        if (!Auth::user()->hasCart())
+            return $this->sendError('Not found');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cart $cart)
-    {
-        //
-    }
+        // Generate data
+        $cart = Auth::user()->cart;
+        $order = Auth::user()->orders()->create([
+            'barcode' => fake()->iban(fake()->countryCode()),
+            'price' => $cart->total()
+        ]);
+        foreach ($cart->products as $item) {
+            $order->products()->attach($item, [
+                'variant' => $item->pivot->variant,
+                'quantity' => $item->pivot->quantity,
+            ]);
+        }
+        $this->destroy();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cart $cart)
-    {
-        //
+        return $this->sendResponse(OrderResource::make($order), code: 201);
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CodeCheckController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Resources\OrderCollection;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,5 +36,19 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['auth:sanctum'])->post('', 'store')->name('products.store');
         Route::patch('{product}/update', 'update')->name('products.update');
         Route::middleware(['auth:sanctum'])->delete('{product}', 'destroy')->name('products.delete');
+    });
+
+    Route::controller(CartController::class)->middleware(['auth:sanctum'])->prefix('cart')->group(function () {
+        Route::get('', 'index')->name('cart.index');
+        Route::post('add', 'add')->name('cart.create');
+        Route::post('remove', 'remove')->name('cart.remove');
+        Route::delete('', 'destroy')->name('cart.delete');
+        Route::post('checkout', 'checkout')->name('cart.checkout');
+    });
+
+    Route::controller(OrderController::class)->middleware(['auth:sanctum'])->prefix('orders')->group(function () {
+        Route::get('', 'index')->name('orders.index');
+        Route::get('{order}', 'show')->name('orders.show');
+        Route::patch('{order}', 'update')->name('orders.update');
     });
 });

@@ -18,7 +18,10 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'cart' => !isset($this->cart) ? null : CartResource::make($this->cart),
+            'orders' => OrderCollection::make($this->orders),
             'products' => new ProductCollection($this->products),
+            'addresses' => new AddressCollection($this->addresses),
         ];
     }
 }

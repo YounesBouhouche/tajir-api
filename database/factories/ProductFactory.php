@@ -19,6 +19,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->word(),
             'description' => fake()->sentence(),
+            'price' => fake()->numberBetween(10, 99999)
         ];
     }
 }
