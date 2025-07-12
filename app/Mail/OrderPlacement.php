@@ -21,6 +21,6 @@ class OrderPlacement extends Mailable
 
     public function build(): Mailable
     {
-        return $this->view('order.placed-pure-css', ['order' => $this->order]);
+        return $this->view('order.placed', ['order' => $this->order]);
     }
 }
