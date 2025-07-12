@@ -518,8 +518,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support and questions:
 - Create an issue on GitHub
-- Email: support@yourdomain.com
-- Documentation: [API Docs](https://your-api-docs-url.com)
+- Email: younes.bouhouche12@gmail.com
+- Documentation: [API Docs](https://localhost:8000/docs)
 
 ## 🙏 Acknowledgments
 
