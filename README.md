@@ -156,7 +156,7 @@ All API responses follow this structure:
     "success": true,
     "message": "Operation completed successfully",
     "data": {
-        // Response data here
+        
     }
 }
 ```
