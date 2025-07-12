@@ -60,8 +60,8 @@ class OrderController extends BaseController
             return $this->sendError('Not found');
         if (!$order->isOwnedBy(Auth::id()))
             return $this->sendError('Unauthorized', code: 403);
-//        if ($order->placed != 0)
-//            return $this->sendError('Already placed', code: 400);
+        if ($order->placed != 0)
+            return $this->sendError('Already placed', code: 400);
 
         $order->update(['placed' => 1, 'delivery_eta' => now()->addDays(2)->toDate()]);
         Mail::send((new OrderPlacement($order))->to(Auth::user()->email)->build());

@@ -66,9 +66,8 @@ class CartController extends BaseController
 
         $products = $cart->products()->get();
         foreach ($validator->getData()['items'] as $item) {
-            if (isset($products[$item])) {
+            if (isset($products[$item]))
                 $cart->products()->detach($products[$item]->getKey());
-            }
         }
         return $this->sendResponse(CartResource::make($cart));
     }

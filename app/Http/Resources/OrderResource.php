@@ -43,7 +43,10 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'barcode' => $this->barcode,
-            'price' => $this->price,
+            'subtotal' => $this->subtotal,
+            'shipping' => $this->shipping,
+            'discount' => $this->discount,
+            'total' => $this->total,
             'placed' => boolval($this->placed),
             'address' => isset($this->address) ? AddressResource::make($this->address): null,
             'products' => $grouped
