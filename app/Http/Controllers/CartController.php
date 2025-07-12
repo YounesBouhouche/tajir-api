@@ -64,7 +64,12 @@ class CartController extends BaseController
         if (!isset($cart))
             return $this->sendError('Not found');
 
-        Auth::user()->cart->products()->detach($validator->getData()['items']);
+        $products = $cart->products()->get();
+        foreach ($validator->getData()['items'] as $item) {
+            if (isset($products[$item])) {
+                $cart->products()->detach($products[$item]->getKey());
+            }
+        }
         return $this->sendResponse(CartResource::make($cart));
     }
 
@@ -85,7 +90,8 @@ class CartController extends BaseController
         $cart = Auth::user()->cart;
         $order = Auth::user()->orders()->create([
             'barcode' => fake()->iban(fake()->countryCode()),
-            'price' => $cart->total()
+            'subtotal' => $cart->total(),
+            'total' => $cart->total(),
         ]);
         foreach ($cart->products as $item) {
             $order->products()->attach($item, [

@@ -50,5 +50,6 @@ Route::prefix('v1')->group(function () {
         Route::get('', 'index')->name('orders.index');
         Route::get('{order}', 'show')->name('orders.show');
         Route::patch('{order}', 'update')->name('orders.update');
+        Route::post('{order}/place', 'place')->name('orders.place');
     });
 });

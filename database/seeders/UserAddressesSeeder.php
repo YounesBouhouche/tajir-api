@@ -19,7 +19,7 @@ class UserAddressesSeeder extends Seeder
     public function run(): void
     {
         Address::factory(3)
-            ->for(User::findOrFail(11))
+            ->for(User::findOrFail(1))
             ->create();
     }
 }

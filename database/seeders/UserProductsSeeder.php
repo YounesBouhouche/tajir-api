@@ -22,7 +22,7 @@ class UserProductsSeeder extends Seeder
                     ->sequence(fn (Sequence $sequence) => ['order' => $sequence->index % 5])
             )
             ->has(Variant::factory(3))
-            ->for(User::findOrFail(11))
+            ->for(User::findOrFail(1))
             ->create();
     }
 }
