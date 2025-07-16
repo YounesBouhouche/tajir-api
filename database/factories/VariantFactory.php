@@ -16,9 +16,14 @@ class VariantFactory extends Factory
      */
     public function definition(): array
     {
+        $promoted_price = fake()->randomElement([null, fake()->numberBetween(0, 1000)]);
         return [
             'name' => fake()->word(),
-            'quantity' => fake()->numberBetween(0, 1000)
+            'quantity' => fake()->numberBetween(0, 1000),
+            'price' => fake()->numberBetween(0, 1000),
+            'promoted_price' => $promoted_price,
+            'promoted_price_end' =>
+                isset($promoted_price) ? now()->addDays(fake()->numberBetween(0, 1000)) : null
         ];
     }
 }

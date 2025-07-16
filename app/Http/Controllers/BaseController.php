@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Arr;
-
 class BaseController extends Controller
 {
     /**
@@ -16,9 +14,9 @@ class BaseController extends Controller
         $response = [
             'success' => true,
             'data'    => $result,
-            'message' => $message,
-            'extra' => $extra
+            'message' => $message
         ];
+        if (!empty($extra)) $response['extra'] = $extra;
         return response()->json($response, $code);
     }
 

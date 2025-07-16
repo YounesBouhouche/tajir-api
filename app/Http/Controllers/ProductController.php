@@ -24,11 +24,29 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function index()
+    public function index(string $category, string $type)
     {
-        $products = Product::latest()->get();
+        $products = Product::query();
+        if ($category != 'ALL') $products = $products->where('category', $category);
+        switch ($type) {
+            case 'popular':
+                $products = $products->inRandomOrder()->limit(10);
+                break;
+            case 'newest':
+                $products = $products->latest();
+                break;
+        }
+        return $this->sendResponse(ProductCollection::make($products->get()));
+    }
+
+    public function recommended(string $category)
+    {
+        $products = Product::query();
+        if ($category != 'ALL') $products = $products->where('category', $category);
+        $products = $products->inRandomOrder()->limit(10)->get();
         return $this->sendResponse(ProductCollection::make($products));
     }
+
     public function show(int $id)
     {
         $product = Product::find($id);

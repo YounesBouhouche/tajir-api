@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'orders' => OrderCollection::make($this->orders),
             'products' => new ProductCollection($this->products),
             'addresses' => new AddressCollection($this->addresses),
+            'image' => $this->image
         ];
     }
 }

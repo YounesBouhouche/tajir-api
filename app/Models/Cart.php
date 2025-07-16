@@ -30,7 +30,7 @@ class Cart extends Model
     {
         return array_sum(
             array_map(
-                fn ($product) => $product->pivot->quantity * $product->price,
+                fn ($product) => $product->pivot->quantity * $product->pivot->price,
                 $this->products()->get()->all()
             )
         );

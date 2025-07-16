@@ -35,7 +35,7 @@ class AuthController extends BaseController
         // Return token
         $user = Auth::user();
         $token = $user->createToken('App')->plainTextToken;
-        return $this->sendResponse($user, 'Logged in', extra: ['token' => $token]);
+        return $this->sendResponse(UserResource::make($user), 'Logged in', extra: ['token' => $token]);
     }
 
     public function register(Request $request)
@@ -60,7 +60,8 @@ class AuthController extends BaseController
         // Return token
         $user = Auth::user();
         $token = $user->createToken('App')->plainTextToken;
-        return $this->sendResponse($user,
+        return $this->sendResponse(
+            UserResource::make($user),
             'Registered',
             201,
             ['token' => $token]
@@ -73,6 +74,7 @@ class AuthController extends BaseController
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
+            'image' => 'url|nullable'
         ]);
         if ($validator->fails())
             return $this->sendError('Validation error', $validator->errors(), 400);
@@ -80,5 +82,17 @@ class AuthController extends BaseController
         // Update
         Auth::user()->update($validator->getData());
         return $this->sendResponse(UserResource::make(Auth::user()));
+    }
+
+    public function logout(Request $request)
+    {
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'token' => 'string',
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
+        Auth::user()->tokens()->where('token', $validator->getData()['token'])->delete();
+        return $this->sendResponse("Success");
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\ProductImageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,5 +52,15 @@ class Product extends Model
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
+    }
+
+    public function minPrice(): float
+    {
+        return floatval($this->variants()->min('price'));
+    }
+
+    public function maxPrice(): float
+    {
+        return floatval($this->variants()->max('price'));
     }
 }

@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
             Route::get('', 'index')->name('user.index');
             Route::patch('', 'update')->name('user.update');
             Route::delete('', 'destroy')->name('user.delete');
+            Route::post('logout', 'logout')->name('user.logout');
         });
     });
 
@@ -31,7 +32,13 @@ Route::prefix('v1')->group(function () {
 
     // Product routes
     Route::controller(ProductController::class)->prefix('products')->group(function () {
-        Route::get('', 'index')->name('products.index');
+        Route::get('{category}/recommended', 'recommended')
+            ->name('products.recommended');
+
+        Route::get('{category}/{type}', 'index')
+            ->whereIn('type', ['popular', 'newest'])
+            ->name('products.index');
+
         Route::get('{id}', 'show')->name('products.show');
         Route::middleware(['auth:sanctum'])->post('', 'store')->name('products.store');
         Route::patch('{product}/update', 'update')->name('products.update');
@@ -40,7 +47,7 @@ Route::prefix('v1')->group(function () {
 
     Route::controller(CartController::class)->middleware(['auth:sanctum'])->prefix('cart')->group(function () {
         Route::get('', 'index')->name('cart.index');
-        Route::post('add', 'add')->name('cart.create');
+        Route::post('add', 'add')->name('cart.add');
         Route::post('remove', 'remove')->name('cart.remove');
         Route::delete('', 'destroy')->name('cart.delete');
         Route::post('checkout', 'checkout')->name('cart.checkout');

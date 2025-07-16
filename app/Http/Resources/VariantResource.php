@@ -16,7 +16,10 @@ class VariantResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'quantity' => $this->quantity
+            'quantity' => $this->quantity,
+            'price' => $this->price,
+            'promoted_price' => $this->promoted_price,
+            'promoted_price_end' => $this->promoted_price_end,
         ];
     }
 }

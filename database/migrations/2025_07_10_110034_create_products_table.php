@@ -16,7 +16,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->integer('price');
+            $table->enum('category', [
+                'ELECTRONICS',
+                'FASHION',
+                'HOME',
+                'BEAUTY',
+                'SPORTS',
+                'TOYS',
+            ])->nullable();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
