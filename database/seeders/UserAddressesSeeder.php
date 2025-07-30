@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Http\Resources\AddressCollection;
-use App\Models\Address;
+use App\Http\Resources\ShippingAddressCollection;
+use App\Models\ShippingAddress;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\User;
@@ -18,7 +18,7 @@ class UserAddressesSeeder extends Seeder
      */
     public function run(): void
     {
-        Address::factory(3)
+        ShippingAddress::factory(3)
             ->for(User::findOrFail(1))
             ->create();
     }

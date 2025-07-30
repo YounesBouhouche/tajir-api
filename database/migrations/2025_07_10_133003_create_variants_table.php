@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('quantity');
             $table->float('price');
             $table->float('promoted_price')->nullable();
             $table->dateTime('promoted_price_end')->nullable();

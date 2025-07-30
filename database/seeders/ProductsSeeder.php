@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\User;
 use App\Models\Variant;
+use App\Models\VariantQuantityChange;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +23,24 @@ class ProductsSeeder extends Seeder
                     ProductImage::factory(5)
                         ->sequence(fn (Sequence $sequence) => ['order' => $sequence->index % 5])
                 )
-                ->has(Variant::factory(3))
+                ->has(
+                    Variant::factory(3)
+                        ->has(
+                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
+                                'amount' => rand(50, 80)
+                            ])->for(User::findOrFail(1))
+                        )
+                        ->has(
+                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
+                                'amount' => rand(-40, -5)
+                            ])->for(User::findOrFail(1))
+                        )
+                        ->has(
+                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
+                                'amount' => rand(10, 40)
+                            ])->for(User::findOrFail(1))
+                        )
+                )
             )
             ->create();
     }

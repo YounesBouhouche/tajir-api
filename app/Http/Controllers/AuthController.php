@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\UserResource;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -72,8 +74,8 @@ class AuthController extends BaseController
     {
         // Validate input
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'name' => 'string',
+            'email' => 'email|unique:users',
             'image' => 'url|nullable'
         ]);
         if ($validator->fails())
@@ -94,5 +96,9 @@ class AuthController extends BaseController
             return $this->sendError('Validation error', $validator->errors(), 400);
         Auth::user()->tokens()->where('token', $validator->getData()['token'])->delete();
         return $this->sendResponse("Success");
+    }
+
+    public function setFavorite(Request $request)
+    {
     }
 }

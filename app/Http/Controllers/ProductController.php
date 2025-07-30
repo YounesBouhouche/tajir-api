@@ -116,4 +116,20 @@ class ProductController extends BaseController
         $product->delete();
         return $this->sendResponse(true);
     }
+
+    public function search(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'query' => 'required|string',
+            'category' => 'required|string'
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
+
+        $query = $validator->getValue('query');
+        $category = $validator->getValue('category');
+        $products = Product::where('name', 'like', '%' . $query . '%');
+        if ($category != 'ALL') $products = $products->where('category', $category);
+        return $this->sendResponse(ProductCollection::make($products->get()));
+    }
 }

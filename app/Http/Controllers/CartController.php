@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Cart;
-use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +25,6 @@ class CartController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'items' => 'required|array|min:1',
-            'items.*.product' => 'required|int',
             'items.*.variant' => 'required|int',
             'items.*.quantity' => 'required|int',
         ]);
@@ -33,18 +32,18 @@ class CartController extends BaseController
             return $this->sendError('Validation error', $validator->errors(), 400);
 
         $items = $validator->getData()['items'];
-        $nonExistingItems = array_filter($items, fn($item) => !Product::exists($item['product']));
+        $nonExistingItems = array_filter($items, fn($item) => !Variant::exists($item['variant']));
         if (!empty($nonExistingItems))
             return $this->sendError(
-                'Some products does not exist',
+                'Some variants does not exist',
                 [
-                    'ids' => implode(',', array_map(fn($item) => $item['product'], $nonExistingItems))
+                    'ids' => implode(',', array_map(fn($item) => $item['variant'], $nonExistingItems))
                 ]
             );
 
         $cart = Auth::user()->getCart();
         foreach ($items as $item) {
-            $cart->products()->attach($item['product'], Arr::only($item, ['variant', 'quantity']));
+            $cart->variants()->attach($item['variant'], Arr::only($item, ['quantity']));
         }
 
         return $this->sendResponse(CartResource::make($cart), code: 201);
@@ -64,17 +63,30 @@ class CartController extends BaseController
         if (!isset($cart))
             return $this->sendError('Not found');
 
-        $products = $cart->products()->get();
-        foreach ($validator->getData()['items'] as $item) {
-            if (isset($products[$item]))
-                $cart->products()->detach($products[$item]->getKey());
+        foreach ($validator->getData()['items'] as $variant) {
+            $cart->variants()->detach($variant);
         }
+        return $this->sendResponse(CartResource::make($cart));
+    }
+
+    public function edit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'variant' => 'required|int',
+            'quantity' => 'required|int'
+        ]);
+        if ($validator->fails())
+            return $this->sendError('Validation error', $validator->errors(), 400);
+        $cart = Auth::user()->cart;
+        $cart->variants()->updateExistingPivot($request->variant, [
+            'quantity' => $request->quantity
+        ]);
         return $this->sendResponse(CartResource::make($cart));
     }
 
     public function destroy()
     {
-        Auth::user()->cart->products()->detach();
+        Auth::user()->cart->variants()->detach();
         Auth::user()->cart->delete();
         return $this->sendResponse('Done');
     }
@@ -92,9 +104,8 @@ class CartController extends BaseController
             'subtotal' => $cart->total(),
             'total' => $cart->total(),
         ]);
-        foreach ($cart->products as $item) {
-            $order->products()->attach($item, [
-                'variant' => $item->pivot->variant,
+        foreach ($cart->variants as $item) {
+            $order->variants()->attach($item, [
                 'quantity' => $item->pivot->quantity,
             ]);
         }

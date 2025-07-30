@@ -3,10 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CodeCheckController;
+use App\Http\Controllers\FavoriteProductsController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ShippingAddressController;
 use App\Http\Resources\OrderCollection;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +26,15 @@ Route::prefix('v1')->group(function () {
         });
     });
 
+    Route::controller(FavoriteProductsController::class)->prefix('favorites')
+        ->middleware('auth:sanctum')
+        ->group(function () {
+            Route::get('', 'index')->name('favorites.index');
+            Route::post('', 'set')->name('favorites.set');
+        });
+
+    Route::middleware(['auth:sanctum'])->resource('shipping_address', ShippingAddressController::class);
+
     Route::prefix('password')->group(function () {
         Route::post('send', ForgotPasswordController::class);
         Route::post('check', CodeCheckController::class);
@@ -32,15 +43,24 @@ Route::prefix('v1')->group(function () {
 
     // Product routes
     Route::controller(ProductController::class)->prefix('products')->group(function () {
-        Route::get('{category}/recommended', 'recommended')
-            ->name('products.recommended');
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::get('{category}/recommended/auth', 'recommended')
+                ->name('products.recommended');
 
+            Route::get('{category}/{type}/auth', 'index')
+                ->whereIn('type', ['popular', 'newest'])
+                ->name('products.index');
+
+            Route::post('', 'store')->name('products.store');
+            Route::get('{id}/auth', 'show')->name('products.show');
+        });
+
+        Route::get('search', 'search')->name('products.search');
         Route::get('{category}/{type}', 'index')
             ->whereIn('type', ['popular', 'newest'])
             ->name('products.index');
 
         Route::get('{id}', 'show')->name('products.show');
-        Route::middleware(['auth:sanctum'])->post('', 'store')->name('products.store');
         Route::patch('{product}/update', 'update')->name('products.update');
         Route::middleware(['auth:sanctum'])->delete('{product}', 'destroy')->name('products.delete');
     });
@@ -49,6 +69,7 @@ Route::prefix('v1')->group(function () {
         Route::get('', 'index')->name('cart.index');
         Route::post('add', 'add')->name('cart.add');
         Route::post('remove', 'remove')->name('cart.remove');
+        Route::post('edit', 'edit')->name('cart.edit');
         Route::delete('', 'destroy')->name('cart.delete');
         Route::post('checkout', 'checkout')->name('cart.checkout');
     });

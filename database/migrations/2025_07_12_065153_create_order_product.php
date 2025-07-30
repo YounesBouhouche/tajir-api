@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Address;
+use App\Models\ShippingAddress;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Variant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,12 +16,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_product', function (Blueprint $table) {
+        Schema::create('order_variant', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Order::class);
-            $table->foreignIdFor(Product::class);
-            $table->integer('variant')->default(0);
-            $table->integer('quantity')->default(0);
+            $table->foreignIdFor(Variant::class);
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_product');
+        Schema::dropIfExists('order_variant');
     }
 };

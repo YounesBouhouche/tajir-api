@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends JsonResource
 {
@@ -24,6 +25,7 @@ class ProductResource extends JsonResource
             'variants' => new VariantCollection($this->variants),
             'category' => $this->category,
             'product_images' => ProductImageCollection::make($this->productImages),
+            'is_favorite' => Auth::user() !== null ? Auth::user()->isFavorite($this->id) : false
         ];
     }
 }

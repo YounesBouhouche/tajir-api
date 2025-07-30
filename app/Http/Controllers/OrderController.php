@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderResource;
 use App\Mail\OrderPlacement;
-use App\Models\Address;
+use App\Models\ShippingAddress;
 use App\Models\Order;
+use App\Models\VariantQuantityChange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -43,13 +44,13 @@ class OrderController extends BaseController
         ]);
         if ($validator->fails())
             return $this->sendError('Bad request', $validator->errors(), 400);
-        $address = Address::find($validator->getData()['address']);
+        $address = ShippingAddress::find($validator->getData()['address']);
         if (!isset($address))
             return $this->sendError('Not found');
         if (!$order->isOwnedBy(Auth::id()))
             return $this->sendError('Unauthorized, you don\'t own this address', code: 403);
 
-        $order->update(['address_id' => $address->id]);
+        $order->update(['shipping_address_id' => $address->id]);
         return $this->sendResponse(OrderResource::make($order));
     }
 
@@ -63,6 +64,12 @@ class OrderController extends BaseController
         if ($order->placed != 0)
             return $this->sendError('Already placed', code: 400);
 
+        foreach ($order->variants as $variant) {
+            $variant->variantQuantityChanges()->create([
+                'amount' => 0 - $variant->pivot->quantity,
+                'user_id' => $order->user->id
+            ]);
+        }
         $order->update(['placed' => 1, 'delivery_eta' => now()->addDays(2)->toDate()]);
         Mail::send((new OrderPlacement($order))->to(Auth::user()->email)->build());
         return $this->sendResponse(OrderResource::make($order));

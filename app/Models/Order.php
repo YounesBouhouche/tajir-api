@@ -20,14 +20,14 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products(): BelongsToMany
+    public function variants(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withPivot(['variant', 'quantity']);
+        return $this->belongsToMany(Variant::class)->withPivot(['quantity']);
     }
 
-    public function address(): BelongsTo
+    public function shippingAddress(): BelongsTo
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(ShippingAddress::class);
     }
 
     public function isOwnedBy(int $user_id)

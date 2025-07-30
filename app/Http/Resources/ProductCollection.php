@@ -16,11 +16,4 @@ class ProductCollection extends ResourceCollection
     {
         return $this->collection->all();
     }
-
-    public function with(Request $request)
-    {
-        return [
-            'status' => 'success'
-        ];
-    }
 }

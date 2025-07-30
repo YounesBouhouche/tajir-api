@@ -15,8 +15,10 @@ class VariantResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
-            'quantity' => $this->quantity,
+            'quantity' => $this->quantity(),
+            'history' => VariantQuantityChangeCollection::make($this->variantQuantityChanges),
             'price' => $this->price,
             'promoted_price' => $this->promoted_price,
             'promoted_price_end' => $this->promoted_price_end,

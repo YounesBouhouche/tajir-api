@@ -25,6 +25,11 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function favoredUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorite_products');
+    }
+
     public function variants(): HasMany
     {
         return $this->hasMany(Variant::class);
@@ -32,7 +37,7 @@ class Product extends Model
 
     public function quantity(): float
     {
-        return array_sum(array_map(fn (Variant $variant) => $variant->quantity, $this->variants()->get()->all()));
+        return array_sum(array_map(fn (Variant $variant) => $variant->quantity(), $this->variants()->get()->all()));
     }
 
 //    public function carts(): BelongsToMany
@@ -43,15 +48,6 @@ class Product extends Model
     public function isOwnedBy(User $user)
     {
         return $this->user_id === $user->id;
-    }
-    public function cart(): BelongsToMany
-    {
-        return $this->belongsToMany(Cart::class);
-    }
-
-    public function orders(): BelongsToMany
-    {
-        return $this->belongsToMany(Order::class);
     }
 
     public function minPrice(): float

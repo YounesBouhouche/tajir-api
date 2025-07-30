@@ -20,18 +20,17 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products(): BelongsToMany
+    public function variants(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)
-            ->withPivot(['variant', 'quantity']);
+        return $this->belongsToMany(Variant::class)->withPivot('quantity');
     }
 
     public function total(): int
     {
         return array_sum(
             array_map(
-                fn ($product) => $product->pivot->quantity * $product->pivot->price,
-                $this->products()->get()->all()
+                fn ($variant) => $variant->pivot->quantity * $variant->price,
+                $this->variants()->get()->all()
             )
         );
     }

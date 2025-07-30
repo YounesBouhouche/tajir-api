@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Address;
+use App\Models\ShippingAddress;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer("total");
             $table->tinyInteger("placed")->default(0);
             $table->dateTime("delivery_eta")->nullable();
-            $table->foreignIdFor(Address::class)->nullable();
+            $table->foreignIdFor(ShippingAddress::class)->nullable();
             $table->foreignIdFor(User::class)->nullable();
             $table->timestamps();
         });
