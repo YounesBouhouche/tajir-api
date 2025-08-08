@@ -17,7 +17,7 @@ class OrderController extends BaseController
 {
     public function index()
     {
-        return $this->sendResponse(OrderCollection::make(Auth::user()->orders));
+        return $this->sendResponse(OrderCollection::make(Auth::user()->orders()->latest()->get()->all()));
     }
 
     public function show(int $id)
@@ -70,7 +70,7 @@ class OrderController extends BaseController
                 'user_id' => $order->user->id
             ]);
         }
-        $order->update(['placed' => 1, 'delivery_eta' => now()->addDays(2)->toDate()]);
+        $order->update(['status' => 'PENDING', 'delivery_eta' => now()->addDays(2)->toDate()]);
         Mail::send((new OrderPlacement($order))->to(Auth::user()->email)->build());
         return $this->sendResponse(OrderResource::make($order));
     }

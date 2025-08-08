@@ -103,6 +103,7 @@ class CartController extends BaseController
             'barcode' => fake()->iban(fake()->countryCode()),
             'subtotal' => $cart->total(),
             'total' => $cart->total(),
+            'status' => 'REQUESTED'
         ]);
         foreach ($cart->variants as $item) {
             $order->variants()->attach($item, [

@@ -21,6 +21,14 @@ return new class extends Migration
             $table->integer("discount")->default(0);
             $table->integer("total");
             $table->tinyInteger("placed")->default(0);
+            $table->enum("status", [
+                'REQUESTED',
+                'PENDING',
+                'ACCEPTED',
+                'REJECTED',
+                'DELIVERED',
+                'CANCELLED',
+            ])->default('REQUESTED');
             $table->dateTime("delivery_eta")->nullable();
             $table->foreignIdFor(ShippingAddress::class)->nullable();
             $table->foreignIdFor(User::class)->nullable();

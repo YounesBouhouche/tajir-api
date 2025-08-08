@@ -5,9 +5,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CodeCheckController;
 use App\Http\Controllers\FavoriteProductsController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShippingAddressController;
 use App\Http\Resources\OrderCollection;
 use Illuminate\Support\Facades\Route;
@@ -26,11 +29,19 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    Route::controller(FavoriteProductsController::class)->prefix('favorites')
+    Route::controller(FavoriteProductsController::class)->prefix('favorite')
         ->middleware('auth:sanctum')
         ->group(function () {
             Route::get('', 'index')->name('favorites.index');
-            Route::post('', 'set')->name('favorites.set');
+            Route::post('', 'store')->name('favorites.store');
+        });
+
+    Route::controller(HistoryController::class)->prefix('history')
+        ->middleware('auth:sanctum')
+        ->group(function () {
+            Route::get('', 'index')->name('history.index');
+            Route::post('', 'store')->name('history.store');
+            Route::delete('', 'clear')->name('history.clear');
         });
 
     Route::middleware(['auth:sanctum'])->resource('shipping_address', ShippingAddressController::class);
@@ -40,6 +51,8 @@ Route::prefix('v1')->group(function () {
         Route::post('check', CodeCheckController::class);
         Route::post('reset', ResetPasswordController::class);
     });
+
+    Route::get('search', SearchController::class)->name('search');
 
     // Product routes
     Route::controller(ProductController::class)->prefix('products')->group(function () {
@@ -55,7 +68,6 @@ Route::prefix('v1')->group(function () {
             Route::get('{id}/auth', 'show')->name('products.show');
         });
 
-        Route::get('search', 'search')->name('products.search');
         Route::get('{category}/{type}', 'index')
             ->whereIn('type', ['popular', 'newest'])
             ->name('products.index');
@@ -79,5 +91,15 @@ Route::prefix('v1')->group(function () {
         Route::get('{order}', 'show')->name('orders.show');
         Route::patch('{order}', 'update')->name('orders.update');
         Route::post('{order}/place', 'place')->name('orders.place');
+    });
+
+    Route::controller(RatingController::class)->prefix('rating')->group(function () {
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::get('', 'index')->name('rating.index');
+            Route::get('{id}', 'show')->name('rating.show');
+            Route::post('', 'store')->name('rating.store');
+            Route::patch('{id}', 'update')->name('rating.update');
+            Route::delete('{id}', 'destroy')->name('rating.delete');
+        });
     });
 });

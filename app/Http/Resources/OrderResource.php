@@ -59,7 +59,9 @@ class OrderResource extends JsonResource
             'total' => $this->total,
             'placed' => boolval($this->placed),
             'shipping_address' => isset($this->shippingAddress) ? ShippingAddressResource::make($this->shippingAddress): null,
-            'products' => $products
+            'products' => $products,
+            'status' => $this->status,
+            'date' => $this->created_at,
         ];
     }
 }

@@ -16,7 +16,7 @@ class FavoriteProductsController extends BaseController
         return $this->sendResponse(ProductCollection::make(Auth::user()->favorites()->get()));
     }
 
-    public function set(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required|int',

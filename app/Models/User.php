@@ -91,8 +91,27 @@ class User extends Authenticatable
         return $this->belongsToMany(Product::class, 'favorite_products');
     }
 
+    public function history(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'history');
+    }
+
+    public function addToHistory(int $product)
+    {
+        $record = $this->history()->find($product);
+        if (isset($record))
+            $this->history()->updateExistingPivot($product, ['visited_at' => now()]);
+        else
+            $this->history()->attach($product, ['visited_at' => now()]);
+    }
+
     public function isFavorite(int $id)
     {
         return $this->favorites()->where('product_id', $id)->exists();
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
     }
 }

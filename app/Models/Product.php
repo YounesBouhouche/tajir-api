@@ -59,4 +59,15 @@ class Product extends Model
     {
         return floatval($this->variants()->max('price'));
     }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function rating()
+    {
+        $ratings = array_map(fn ($rating) => $rating['rate'], $this->ratings()->get()->all());
+        return empty($ratings) ? null : array_sum($ratings) / sizeof($ratings);
+    }
 }
