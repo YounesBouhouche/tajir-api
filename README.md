@@ -2,58 +2,28 @@
 
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-A robust Laravel-based REST API for e-commerce applications, featuring comprehensive user authentication, product management, shopping cart functionality, and order processing.
+A Laravel-based REST API for e-commerce applications: users, products, carts, orders, and email notifications.
 
-## 🚀 Features
+## Summary
+- Language: PHP 8.2+
+- Framework: Laravel (project uses L5-Swagger for API docs)
+- API docs: served at /api-docs (generated with L5-Swagger + Swagger UI / Scalar UI)
 
-### Authentication & User Management
-- **User Registration & Login** with email verification
-- **JWT Token-based Authentication** using Laravel Sanctum
-- **Password Reset** with email verification codes
-- **User Profile Management** (view, update, delete)
-- **Secure Password Hashing** with bcrypt
+## Quick links
+- API docs (local): http://localhost:8000/api-docs
+- Built docs (JSON/YAML): ./storage/api-docs or ./public/api-docs (depending on configuration)
 
-### Product Management
-- **Product CRUD Operations** (Create, Read, Update, Delete)
-- **Product Images** with multiple image support and ordering
-- **Product Variants** (size, color, etc.) with individual pricing
-- **Product Search & Filtering** capabilities
-- **User-owned Products** (sellers can manage their products)
+## Primary features
+- User authentication and profile management (Laravel Sanctum)
+- Password reset flow with verification codes
+- Product management with images and variants
+- Shopping cart with persistent sessions and checkout
+- Order placement, history, and status tracking
+- Email integration (MailerSend)
 
-### Shopping Cart
-- **Add/Remove Products** to/from cart
-- **Cart Persistence** across sessions
-- **Quantity Management** for cart items
-- **Cart Checkout** process
-- **Clear Cart** functionality
-
-### Order Management
-- **Order Placement** from cart checkout
-- **Order History** for users
-- **Order Status Tracking**
-- **Order Details** with product information
-- **Email Notifications** for order placement
-
-### Additional Features
-- **RESTful API Design** following Laravel conventions
-- **Database Migrations** for easy deployment
-- **Factory & Seeder** support for testing data
-- **Comprehensive Testing** setup
-- **Email Integration** with MailerSend
-- **CORS Support** for frontend integration
-
-## 🛠 Built With
-
-* **[Laravel 12.x](https://laravel.com/)** - PHP Web Framework
-* **[PHP 8.2+](https://www.php.net/)** - Server-side Programming Language
-* **[SQLite](https://www.sqlite.org/)** - Database (configurable to MySQL/PostgreSQL)
-* **[Laravel Sanctum](https://laravel.com/docs/sanctum)** - API Authentication
-* **[MailerSend](https://www.mailersend.com/)** - Email Service Provider
-* **[Laravel Breeze](https://laravel.com/docs/breeze)** - Authentication Scaffolding
-
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
@@ -70,8 +40,9 @@ Before you begin, ensure you have met the following requirements:
 * **[Composer](https://getcomposer.org/)** - Dependency Manager for PHP
 * **Database** - MySQL, PostgreSQL, or SQLite
 * **Web Server** - Apache, Nginx, or Laravel's built-in server
+* **Optional: MailerSend account** for email notifications
 
-## ⚡ Quick Start
+## Getting started (local)
 
 ### Installation
 
@@ -86,443 +57,114 @@ Before you begin, ensure you have met the following requirements:
    composer install
    ```
 
-3. **Environment Setup**
+3. **Copy environment and set values**
    ```bash
    cp .env.example .env
-   ```
-
-4. **Generate application key**
-   ```bash
    php artisan key:generate
    ```
 
-5. **Configure your database**
-   Edit the `.env` file with your database credentials:
-   ```env
-   DB_CONNECTION=sqlite
-   DB_DATABASE=/absolute/path/to/database/database.sqlite
-   
-   # For MySQL:
-   # DB_CONNECTION=mysql
-   # DB_HOST=127.0.0.1
-   # DB_PORT=3306
-   # DB_DATABASE=tajir_api
-   # DB_USERNAME=your_username
-   # DB_PASSWORD=your_password
-   ```
+4. **Database (SQLite example)**
+   - Create the sqlite file if using sqlite:
+     ```bash
+     touch database/database.sqlite
+     ```
+   - In `.env` set:
+     ```env
+     DB_CONNECTION=sqlite
+     DB_DATABASE=${PWD}/database/database.sqlite
+     ```
 
-6. **Configure Email Service (Optional)**
-   ```env
-   MAIL_MAILER=mailersend
-   MAILERSEND_API_KEY=your_mailersend_api_key
-   MAIL_FROM_ADDRESS=noreply@yourdomain.com
-   MAIL_FROM_NAME="Tajir API"
-   ```
+   For MySQL/Postgres, update `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` accordingly.
 
-7. **Run database migrations**
+5. **Migrate and seed (optional)**
    ```bash
-   php artisan migrate
+   php artisan migrate --seed
    ```
 
-8. **Seed the database (Optional)**
-   ```bash
-   php artisan db:seed
-   ```
+6. **Generate API docs (L5-Swagger)**
 
-9. **Start the development server**
+   The project uses L5-Swagger to produce OpenAPI documentation and a Swagger UI (Scalar UI).
+
+   - Generate the OpenAPI documentation (produces JSON in `storage/api-docs` by default):
+
+     ```bash
+     php artisan l5-swagger:generate
+     ```
+
+   - After generation, open the docs in your browser:
+
+     ```
+     http://localhost:8000/api-docs
+     ```
+
+   If your setup serves docs from a different location, check `config/l5-swagger.php` and the `storage/api-docs` (or `public/api-docs`) folder.
+
+7. **Start the server**
    ```bash
    php artisan serve
    ```
 
-Your API will be available at `http://localhost:8000`
-
-## 📚 API Documentation
-
-### Base URL
-```
-http://localhost:8000/api/v1
-```
-
-### Authentication
-Most endpoints require authentication using Bearer tokens. Include the token in your requests:
-```
-Authorization: Bearer your_token_here
-```
-
-### Response Format
-All API responses follow this structure:
-```json
-{
-    "success": true,
-    "message": "Operation completed successfully",
-    "data": {
-        
-    }
-}
-```
-
-### Authentication Endpoints
-
-#### Register User
-```http
-POST /api/v1/user/register
-Content-Type: application/json
-
-{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "password123",
-    "password_confirmation": "password123"
-}
-```
-
-#### Login User
-```http
-POST /api/v1/user/login
-Content-Type: application/json
-
-{
-    "email": "john@example.com",
-    "password": "password123"
-}
-```
-
-#### Get User Profile
-```http
-GET /api/v1/user
-Authorization: Bearer {token}
-```
-
-#### Update User Profile
-```http
-PATCH /api/v1/user
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "name": "Updated Name",
-    "email": "newemail@example.com"
-}
-```
-
-#### Delete User Account
-```http
-DELETE /api/v1/user
-Authorization: Bearer {token}
-```
-
-### Password Reset Endpoints
-
-#### Send Reset Code
-```http
-POST /api/v1/password/send
-Content-Type: application/json
-
-{
-    "email": "john@example.com"
-}
-```
-
-#### Verify Reset Code
-```http
-POST /api/v1/password/check
-Content-Type: application/json
-
-{
-    "email": "john@example.com",
-    "code": "123456"
-}
-```
-
-#### Reset Password
-```http
-POST /api/v1/password/reset
-Content-Type: application/json
-
-{
-    "email": "john@example.com",
-    "code": "123456",
-    "password": "newpassword123",
-    "password_confirmation": "newpassword123"
-}
-```
-
-### Product Endpoints
-
-#### Get All Products
-```http
-GET /api/v1/products
-```
-
-#### Get Single Product
-```http
-GET /api/v1/products/{id}
-```
-
-#### Create Product (Auth Required)
-```http
-POST /api/v1/products
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "name": "Product Name",
-    "description": "Product description",
-    "price": 29.99,
-    "stock": 100,
-    "category": "Electronics"
-}
-```
-
-#### Update Product
-```http
-PATCH /api/v1/products/{id}/update
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "name": "Updated Product Name",
-    "price": 39.99
-}
-```
-
-#### Delete Product (Auth Required)
-```http
-DELETE /api/v1/products/{id}
-Authorization: Bearer {token}
-```
-
-### Cart Endpoints (All Require Authentication)
-
-#### Get Cart Items
-```http
-GET /api/v1/cart
-Authorization: Bearer {token}
-```
-
-#### Add Item to Cart
-```http
-POST /api/v1/cart/add
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "product_id": 1,
-    "quantity": 2,
-    "variant_id": 3
-}
-```
-
-#### Remove Item from Cart
-```http
-POST /api/v1/cart/remove
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "product_id": 1,
-    "variant_id": 3
-}
-```
-
-#### Clear Cart
-```http
-DELETE /api/v1/cart
-Authorization: Bearer {token}
-```
-
-#### Checkout Cart
-```http
-POST /api/v1/cart/checkout
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "shipping_address": "123 Main St, City, Country",
-    "payment_method": "credit_card"
-}
-```
-
-### Order Endpoints (All Require Authentication)
-
-#### Get User Orders
-```http
-GET /api/v1/orders
-Authorization: Bearer {token}
-```
-
-#### Get Single Order
-```http
-GET /api/v1/orders/{id}
-Authorization: Bearer {token}
-```
-
-#### Update Order Status
-```http
-PATCH /api/v1/orders/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-    "status": "shipped"
-}
-```
-
-## 🗄️ Database Schema
-
-### Core Tables
-- **users** - User accounts and authentication
-- **products** - Product catalog
-- **product_images** - Product image management
-- **variants** - Product variants (size, color, etc.)
-- **carts** - Shopping cart items
-- **orders** - Order information
-- **addresses** - User shipping addresses
-- **reset_passwords** - Password reset tokens
-
-### Relationships
-- Users can have multiple products (seller relationship)
-- Products can have multiple images and variants
-- Users have shopping carts with multiple products
-- Orders belong to users and contain multiple products
-
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-# Run all tests
-php artisan test
-
-# Run with coverage
-php artisan test --coverage
-
-# Run specific test file
-php artisan test tests/Feature/AuthTest.php
-
-# Run with verbose output
-php artisan test --verbose
-```
-
-### Test Categories
-- **Feature Tests** - API endpoint testing
-- **Unit Tests** - Individual component testing
-- **Database Tests** - Model and relationship testing
-
-## 🚀 Deployment
-
-### Production Environment Setup
-
-1. **Server Requirements**
-   - PHP 8.2+ with required extensions
-   - Web server (Apache/Nginx)
-   - Database server (MySQL/PostgreSQL)
-   - SSL certificate for HTTPS
-
-2. **Environment Configuration**
-   ```bash
-   # Set production environment
-   APP_ENV=production
-   APP_DEBUG=false
-   APP_URL=https://yourdomain.com
-   
-   # Configure production database
-   DB_CONNECTION=mysql
-   DB_HOST=your-db-host
-   DB_DATABASE=your-db-name
-   DB_USERNAME=your-db-user
-   DB_PASSWORD=your-secure-password
-   
-   # Configure email service
-   MAIL_MAILER=mailersend
-   MAILERSEND_API_KEY=your-production-api-key
-   ```
-
-3. **Deployment Steps**
-   ```bash
-   # Install dependencies
-   composer install --optimize-autoloader --no-dev
-   
-   # Cache configuration
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   
-   # Run migrations
-   php artisan migrate --force
-   
-   # Set proper permissions
-   chmod -R 755 storage bootstrap/cache
-   ```
-
-### Docker Deployment (Optional)
-
-Create a `Dockerfile`:
-```dockerfile
-FROM php:8.2-fpm
-
-# Install dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
-WORKDIR /var/www
-
-# Copy application files
-COPY . .
-
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www
-```
-
-## 🔧 Configuration
-
-### Key Configuration Files
-- `.env` - Environment variables
-- `config/database.php` - Database configuration
-- `config/mail.php` - Email configuration
-- `config/cors.php` - CORS settings
-- `config/sanctum.php` - API authentication
-
-### Performance Optimization
-- Enable OPcache in production
-- Use Redis for caching and sessions
-- Configure queue workers for email processing
-- Implement database indexing for large datasets
-
-## 🤝 Contributing
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Development Guidelines
-- Follow PSR-12 coding standards
-- Write comprehensive tests for new features
-- Update documentation for API changes
-- Use meaningful commit messages
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-For support and questions:
-- Create an issue on GitHub
-- Email: younes.bouhouche12@gmail.com
-- Documentation: [API Docs](https://localhost:8000/docs)
-
-## 🙏 Acknowledgments
-
-- Laravel team for the amazing framework
-- Contributors and the open-source community
-- MailerSend for email services
+   The app will be available at `http://127.0.0.1:8000` (API base example: `http://127.0.0.1:8000/api/v1`)
+
+## Authentication and API usage
+- Most endpoints require a Bearer token (Laravel Sanctum). Include in requests:
+
+  ```
+  Authorization: Bearer {token}
+  ```
+
+- Responses follow the project's standard envelope: `success`, `message`, `data`.
+
+## API docs and how to use them
+- The interactive API docs are available at `/api-docs` and are generated by L5-Swagger.
+- If you update PHPDoc annotations or controllers, re-run `php artisan l5-swagger:generate` to refresh the docs.
+- If your Swagger UI shows an empty schema, check that `config/l5-swagger.php` points to the correct routes and that the generated JSON exists in `storage/api-docs`.
+
+## Testing
+- Run the test suite with:
+
+  ```bash
+  php artisan test
+  ```
+
+- Run a specific test file:
+
+  ```bash
+  php artisan test tests/Feature/SomeTest.php
+  ```
+
+## Deployment notes
+- Install dependencies without dev packages in production:
+
+  ```bash
+  composer install --optimize-autoloader --no-dev
+  ```
+
+- Cache config/routes/views and run migrations:
+
+  ```bash
+  php artisan config:cache
+  php artisan route:cache
+  php artisan view:cache
+  php artisan migrate --force
+  ```
+
+- Set correct permissions for `storage` and `bootstrap/cache`.
+
+## Troubleshooting
+- Docs not appearing: ensure `php artisan l5-swagger:generate` ran successfully and the JSON file exists under `storage/api-docs` (or configured output folder).
+- Mail not sending: confirm `MAIL_MAILER` and provider API keys in `.env`.
+- Environment config not loading: run `php artisan config:clear` and `php artisan cache:clear`.
+
+## Contributing
+- Follow PSR-12 coding style
+- Add tests for new features
+- Update API docs annotations when changing endpoints
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contact
+
+For questions or issues, open an issue or contact: younes.bouhouche12@gmail.com
