@@ -12,18 +12,65 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Ratings",
+ *     description="API Endpoints for Product Ratings"
+ * )
+ */
 class RatingController extends BaseController
 {
     /**
-     * Display all resources.
+     * @OA\Get(
+     *     path="/api/v1/user/ratings",
+     *     summary="Get list of ratings for authenticated user",
+     *     tags={"Ratings"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of ratings",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Rating"))
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
      */
     public function index()
     {
         return $this->sendResponse(RatingWithProductCollection::make(Auth::user()->ratings));
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/v1/user/ratings",
+     *     summary="Create a new rating for a product",
+     *     tags={"Ratings"},
+     *     security={{"sanctum": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="product", type="integer", example=1),
+     *             @OA\Property(property="rate", type="integer", example=5),
+     *             @OA\Property(property="note", type="string", example="Great product!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rating created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Rating")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -50,7 +97,32 @@ class RatingController extends BaseController
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/v1/user/ratings/{id}",
+     *     summary="Get a specific rating by ID",
+     *     tags={"Ratings"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Rating ID",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of rating",
+     *         @OA\JsonContent(ref="#/components/schemas/Rating")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rating not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -59,9 +131,7 @@ class RatingController extends BaseController
         return $this->sendResponse(RatingResource::make(Rating::find($id)));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         if (!Rating::where('id', $id)->exists())
@@ -81,9 +151,7 @@ class RatingController extends BaseController
         return $this->sendResponse(RatingResource::make($rating));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         if (!Rating::where('id', $id)->exists())
