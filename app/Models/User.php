@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UnbannedUserScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,10 +12,25 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @OA\Schema(
+ *     title="User",
+ *     description="User model",
+ *     @OA\Property(property="id", type="integer", readOnly=true),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="email", type="string", format="email"),
+ *     @OA\Property(property="image", type="string", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time", readOnly=true),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true),
+ * )
+ */
+#[ScopedBy(UnbannedUserScope::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +41,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'image'
+        'image',
+        'description',
     ];
 
     /**
@@ -99,10 +117,16 @@ class User extends Authenticatable
     public function addToHistory(int $product)
     {
         $record = $this->history()->find($product);
-        if (isset($record))
+        if (isset($record)) {
             $this->history()->updateExistingPivot($product, ['visited_at' => now()]);
-        else
+        } else {
             $this->history()->attach($product, ['visited_at' => now()]);
+        }
+    }
+
+    public function clearHistory()
+    {
+        $this->history()->detach();
     }
 
     public function isFavorite(int $id)

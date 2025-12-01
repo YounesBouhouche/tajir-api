@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class UserResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class UserResource extends JsonResource
             'orders' => OrderCollection::make($this->orders),
             'products' => new ProductCollection($this->products),
             'shipping_addresses' => new ShippingAddressCollection($this->shippingAddresses),
-            'image' => $this->image,
+            'image' => Storage::disk('public')->url($this->image),
             'ratings' => $this->ratings,
         ];
     }
