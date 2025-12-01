@@ -1,0 +1,746 @@
+{
+    "categories": [
+        {
+            "name": "Electronics",
+            "description": "Devices and gadgets including phones, laptops, and accessories.",
+            "product_types": [
+                {
+                    "name": "Smartphones",
+                    "description": "Mobile phones with advanced features and internet connectivity.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "storage_capacity": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false },
+                        "state": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Laptops",
+                    "description": "Portable computers for personal and professional use.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "ram_size": { "type": "string", "required": true },
+                        "storage_type": { "type": "string", "required": true },
+                        "processor": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Headphones",
+                    "description": "Audio devices for personal listening.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "wireless": { "type": "boolean", "required": false }
+                    }
+                },
+                {
+                    "name": "Tablets",
+                    "description": "Portable touchscreen computing devices.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "screen_size": { "type": "string", "required": true },
+                        "storage_capacity": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Smartwatches",
+                    "description": "Wearable devices with smart features.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "display_type": { "type": "string", "required": false },
+                        "water_resistant": { "type": "boolean", "required": false },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Cameras",
+                    "description": "Digital cameras and photography equipment.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "megapixels": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "lens_included": { "type": "boolean", "required": false }
+                    }
+                },
+                {
+                    "name": "Gaming Consoles",
+                    "description": "Video game consoles and accessories.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "storage_capacity": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Fashion",
+            "description": "Clothing, footwear, and fashion accessories for all occasions.",
+            "product_types": [
+                {
+                    "name": "Men's Clothing",
+                    "description": "Apparel for men including shirts, pants, and jackets.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false },
+                        "fit_type": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Women's Clothing",
+                    "description": "Apparel for women including dresses, tops, and skirts.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false },
+                        "fit_type": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Shoes",
+                    "description": "Footwear for all genders and occasions.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "gender": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Bags & Accessories",
+                    "description": "Handbags, backpacks, and fashion accessories.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Jewelry",
+                    "description": "Necklaces, rings, bracelets, and other jewelry items.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": false },
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Watches",
+                    "description": "Analog and digital watches for fashion and function.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": false },
+                        "type": { "type": "string", "required": true },
+                        "strap_material": { "type": "string", "required": false },
+                        "water_resistant": { "type": "boolean", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Home & Kitchen",
+            "description": "Furniture, appliances, and home decor items.",
+            "product_types": [
+                {
+                    "name": "Furniture",
+                    "description": "Tables, chairs, sofas, and other home furniture.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "dimensions": { "type": "string", "required": false },
+                        "room_type": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Kitchen Appliances",
+                    "description": "Blenders, microwaves, coffee makers, and other kitchen devices.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "power": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Home Decor",
+                    "description": "Decorative items for beautifying living spaces.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false },
+                        "dimensions": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Bedding",
+                    "description": "Sheets, pillows, comforters, and bed accessories.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false },
+                        "thread_count": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Lighting",
+                    "description": "Lamps, ceiling lights, and lighting fixtures.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "bulb_type": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false },
+                        "dimmable": { "type": "boolean", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Beauty & Personal Care",
+            "description": "Cosmetics, skincare, and personal hygiene products.",
+            "product_types": [
+                {
+                    "name": "Skincare",
+                    "description": "Moisturizers, cleansers, and skincare treatments.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "skin_type": { "type": "string", "required": false },
+                        "volume": { "type": "string", "required": true },
+                        "spf": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Makeup",
+                    "description": "Cosmetics including lipstick, foundation, and eye makeup.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "shade": { "type": "string", "required": false },
+                        "finish": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Haircare",
+                    "description": "Shampoos, conditioners, and hair styling products.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "hair_type": { "type": "string", "required": false },
+                        "volume": { "type": "string", "required": true }
+                    }
+                },
+                {
+                    "name": "Fragrances",
+                    "description": "Perfumes and colognes for men and women.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "name": { "type": "string", "required": true },
+                        "gender": { "type": "string", "required": false },
+                        "volume": { "type": "string", "required": true },
+                        "scent_family": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Sports & Outdoors",
+            "description": "Sports equipment, outdoor gear, and fitness products.",
+            "product_types": [
+                {
+                    "name": "Fitness Equipment",
+                    "description": "Dumbbells, yoga mats, and home workout gear.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "weight": { "type": "string", "required": false },
+                        "material": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Outdoor Recreation",
+                    "description": "Camping gear, hiking equipment, and outdoor accessories.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "capacity": { "type": "string", "required": false },
+                        "weather_resistant": { "type": "boolean", "required": false }
+                    }
+                },
+                {
+                    "name": "Sports Apparel",
+                    "description": "Athletic clothing and sports-specific wear.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "sport": { "type": "string", "required": false },
+                        "gender": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Bicycles",
+                    "description": "Bikes for various terrains and purposes.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "frame_size": { "type": "string", "required": true },
+                        "gear_count": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Books & Media",
+            "description": "Books, music, movies, and entertainment media.",
+            "product_types": [
+                {
+                    "name": "Books",
+                    "description": "Physical and digital books across all genres.",
+                    "attributes_schema": {
+                        "title": { "type": "string", "required": true },
+                        "author": { "type": "string", "required": true },
+                        "genre": { "type": "string", "required": true },
+                        "format": { "type": "string", "required": true },
+                        "language": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Music",
+                    "description": "CDs, vinyl records, and digital music.",
+                    "attributes_schema": {
+                        "artist": { "type": "string", "required": true },
+                        "album": { "type": "string", "required": true },
+                        "genre": { "type": "string", "required": true },
+                        "format": { "type": "string", "required": true }
+                    }
+                },
+                {
+                    "name": "Movies & TV",
+                    "description": "DVDs, Blu-rays, and digital video content.",
+                    "attributes_schema": {
+                        "title": { "type": "string", "required": true },
+                        "genre": { "type": "string", "required": true },
+                        "format": { "type": "string", "required": true },
+                        "rating": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Video Games",
+                    "description": "Games for various gaming platforms.",
+                    "attributes_schema": {
+                        "title": { "type": "string", "required": true },
+                        "platform": { "type": "string", "required": true },
+                        "genre": { "type": "string", "required": true },
+                        "rating": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Toys & Games",
+            "description": "Toys, board games, and entertainment for children and adults.",
+            "product_types": [
+                {
+                    "name": "Action Figures",
+                    "description": "Collectible and playable action figures.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "character": { "type": "string", "required": true },
+                        "age_range": { "type": "string", "required": true },
+                        "height": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Board Games",
+                    "description": "Table-top games for family and friends.",
+                    "attributes_schema": {
+                        "title": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "players": { "type": "string", "required": true },
+                        "age_range": { "type": "string", "required": true }
+                    }
+                },
+                {
+                    "name": "Building Toys",
+                    "description": "Construction sets and building blocks.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "theme": { "type": "string", "required": false },
+                        "pieces_count": { "type": "string", "required": false },
+                        "age_range": { "type": "string", "required": true }
+                    }
+                },
+                {
+                    "name": "Educational Toys",
+                    "description": "Learning and development toys for children.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "age_range": { "type": "string", "required": true },
+                        "skill_focus": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Automotive",
+            "description": "Car parts, accessories, and automotive tools.",
+            "product_types": [
+                {
+                    "name": "Car Accessories",
+                    "description": "Interior and exterior car accessories.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "compatibility": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Car Parts",
+                    "description": "Replacement parts and components for vehicles.",
+                    "attributes_schema": {
+                        "part_type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "compatibility": { "type": "string", "required": true },
+                        "warranty": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Automotive Tools",
+                    "description": "Tools and equipment for vehicle maintenance.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Baby & Kids",
+            "description": "Products for babies, toddlers, and young children.",
+            "product_types": [
+                {
+                    "name": "Baby Clothing",
+                    "description": "Clothes for infants and toddlers.",
+                    "attributes_schema": {
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "gender": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Baby Gear",
+                    "description": "Strollers, car seats, and baby carriers.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "age_range": { "type": "string", "required": true },
+                        "weight_capacity": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Nursery Furniture",
+                    "description": "Cribs, changing tables, and nursery essentials.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false },
+                        "dimensions": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Feeding Essentials",
+                    "description": "Bottles, high chairs, and feeding accessories.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "material": { "type": "string", "required": false },
+                        "age_range": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Pet Supplies",
+            "description": "Food, toys, and accessories for pets.",
+            "product_types": [
+                {
+                    "name": "Pet Food",
+                    "description": "Food and treats for dogs, cats, and other pets.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "pet_type": { "type": "string", "required": true },
+                        "weight": { "type": "string", "required": true },
+                        "flavor": { "type": "string", "required": false },
+                        "age_range": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Pet Toys",
+                    "description": "Toys and entertainment for pets.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "pet_type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": false },
+                        "size": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Pet Accessories",
+                    "description": "Collars, leashes, beds, and other pet accessories.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "pet_type": { "type": "string", "required": true },
+                        "size": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Pet Grooming",
+                    "description": "Grooming tools and products for pet care.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "pet_type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Office Supplies",
+            "description": "Stationery, office furniture, and business equipment.",
+            "product_types": [
+                {
+                    "name": "Stationery",
+                    "description": "Pens, notebooks, and writing supplies.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "color": { "type": "string", "required": false },
+                        "quantity": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Office Furniture",
+                    "description": "Desks, chairs, and office storage solutions.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false },
+                        "dimensions": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Printers & Scanners",
+                    "description": "Office printing and scanning equipment.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "connectivity": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Office Electronics",
+                    "description": "Calculators, shredders, and other office devices.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Garden & Outdoor",
+            "description": "Gardening tools, plants, and outdoor living products.",
+            "product_types": [
+                {
+                    "name": "Gardening Tools",
+                    "description": "Shovels, rakes, pruners, and other gardening equipment.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Plants & Seeds",
+                    "description": "Live plants, seeds, and bulbs for gardening.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "species": { "type": "string", "required": true },
+                        "sunlight_requirement": { "type": "string", "required": false },
+                        "water_requirement": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Outdoor Furniture",
+                    "description": "Patio furniture, garden benches, and outdoor seating.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "color": { "type": "string", "required": false },
+                        "weather_resistant": { "type": "boolean", "required": false }
+                    }
+                },
+                {
+                    "name": "Grills & Outdoor Cooking",
+                    "description": "BBQ grills, smokers, and outdoor cooking equipment.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "fuel_type": { "type": "string", "required": true },
+                        "cooking_area": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Health & Wellness",
+            "description": "Health monitoring devices, supplements, and wellness products.",
+            "product_types": [
+                {
+                    "name": "Vitamins & Supplements",
+                    "description": "Dietary supplements and vitamins.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "quantity": { "type": "string", "required": true },
+                        "dosage": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Medical Devices",
+                    "description": "Blood pressure monitors, thermometers, and health trackers.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": false },
+                        "connectivity": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Wellness Products",
+                    "description": "Massage devices, aromatherapy, and relaxation products.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": false },
+                        "power_source": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Food & Beverages",
+            "description": "Groceries, snacks, and beverages.",
+            "product_types": [
+                {
+                    "name": "Snacks",
+                    "description": "Chips, cookies, and packaged snacks.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "flavor": { "type": "string", "required": true },
+                        "weight": { "type": "string", "required": true },
+                        "dietary_info": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Beverages",
+                    "description": "Soft drinks, juices, coffee, and tea.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "type": { "type": "string", "required": true },
+                        "flavor": { "type": "string", "required": false },
+                        "volume": { "type": "string", "required": true }
+                    }
+                },
+                {
+                    "name": "Pantry Staples",
+                    "description": "Rice, pasta, cooking oils, and basic ingredients.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "brand": { "type": "string", "required": true },
+                        "weight": { "type": "string", "required": true },
+                        "organic": { "type": "boolean", "required": false }
+                    }
+                },
+                {
+                    "name": "Fresh Produce",
+                    "description": "Fruits and vegetables.",
+                    "attributes_schema": {
+                        "type": { "type": "string", "required": true },
+                        "variety": { "type": "string", "required": false },
+                        "organic": { "type": "boolean", "required": false },
+                        "origin": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Jewelry & Watches",
+            "description": "Fine jewelry, fashion accessories, and timepieces.",
+            "product_types": [
+                {
+                    "name": "Rings",
+                    "description": "Engagement rings, wedding bands, and fashion rings.",
+                    "attributes_schema": {
+                        "material": { "type": "string", "required": true },
+                        "stone_type": { "type": "string", "required": false },
+                        "size": { "type": "string", "required": true },
+                        "style": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Necklaces",
+                    "description": "Chains, pendants, and statement necklaces.",
+                    "attributes_schema": {
+                        "material": { "type": "string", "required": true },
+                        "length": { "type": "string", "required": true },
+                        "style": { "type": "string", "required": false },
+                        "stone_type": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Earrings",
+                    "description": "Studs, hoops, and drop earrings.",
+                    "attributes_schema": {
+                        "material": { "type": "string", "required": true },
+                        "style": { "type": "string", "required": true },
+                        "stone_type": { "type": "string", "required": false }
+                    }
+                },
+                {
+                    "name": "Luxury Watches",
+                    "description": "Premium timepieces and luxury watch brands.",
+                    "attributes_schema": {
+                        "brand": { "type": "string", "required": true },
+                        "model": { "type": "string", "required": true },
+                        "movement": { "type": "string", "required": true },
+                        "material": { "type": "string", "required": true },
+                        "water_resistance": { "type": "string", "required": false }
+                    }
+                }
+            ]
+        }
+    ]
+}
