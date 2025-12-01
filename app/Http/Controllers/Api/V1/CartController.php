@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Resources\CartResource;
 use App\Http\Resources\OrderResource;
@@ -16,8 +16,9 @@ class CartController extends BaseController
     public function index()
     {
         $cart = Cart::whereBelongsTo(Auth::user());
-        if (!isset($cart))
+        if (!isset($cart)) {
             return $this->sendError('Not found');
+        }
         return $this->sendResponse(CartResource::make($cart));
     }
 
@@ -28,18 +29,20 @@ class CartController extends BaseController
             'items.*.variant' => 'required|int',
             'items.*.quantity' => 'required|int',
         ]);
-        if ($validator->fails())
+        if ($validator->fails()) {
             return $this->sendError('Validation error', $validator->errors(), 400);
+        }
 
         $items = $validator->getData()['items'];
-        $nonExistingItems = array_filter($items, fn($item) => !Variant::exists($item['variant']));
-        if (!empty($nonExistingItems))
+        $nonExistingItems = array_filter($items, fn ($item) => !Variant::exists($item['variant']));
+        if (!empty($nonExistingItems)) {
             return $this->sendError(
                 'Some variants does not exist',
                 [
-                    'ids' => implode(',', array_map(fn($item) => $item['variant'], $nonExistingItems))
+                    'ids' => implode(',', array_map(fn ($item) => $item['variant'], $nonExistingItems))
                 ]
             );
+        }
 
         $cart = Auth::user()->getCart();
         foreach ($items as $item) {
@@ -55,13 +58,15 @@ class CartController extends BaseController
             'items' => 'required|array|min:1',
             'items.*' => 'int',
         ]);
-        if ($validator->fails())
+        if ($validator->fails()) {
             return $this->sendError('Validation error', $validator->errors(), 400);
+        }
 
         $cart = Auth::user()->cart;
 
-        if (!isset($cart))
+        if (!isset($cart)) {
             return $this->sendError('Not found');
+        }
 
         foreach ($validator->getData()['items'] as $variant) {
             $cart->variants()->detach($variant);
@@ -75,8 +80,9 @@ class CartController extends BaseController
             'variant' => 'required|int',
             'quantity' => 'required|int'
         ]);
-        if ($validator->fails())
+        if ($validator->fails()) {
             return $this->sendError('Validation error', $validator->errors(), 400);
+        }
         $cart = Auth::user()->cart;
         $cart->variants()->updateExistingPivot($request->variant, [
             'quantity' => $request->quantity
@@ -94,8 +100,9 @@ class CartController extends BaseController
     public function checkout()
     {
         // Check for cart existence
-        if (!Auth::user()->hasCart())
+        if (!Auth::user()->hasCart()) {
             return $this->sendError('Not found');
+        }
 
         // Generate data
         $cart = Auth::user()->cart;
