@@ -6,8 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @OA\Schema(
+ *     title="Cart",
+ *     description="Cart model",
+ *     @OA\Property(property="id", type="integer", readOnly=true),
+ *     @OA\Property(property="user_id", type="integer"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", readOnly=true),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", readOnly=true),
+ * )
+ */
 class Cart extends Model
 {
     /** @use HasFactory<\Database\Factories\CartFactory> */

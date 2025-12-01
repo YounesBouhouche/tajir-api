@@ -21,7 +21,7 @@ class OrderController extends BaseController
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/orders",
+     *     path="/api/v1/user/orders",
      *     summary="Get list of orders for authenticated user",
      *     tags={"Orders"},
      *     security={{"sanctum": {}}},
@@ -65,8 +65,55 @@ class OrderController extends BaseController
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/v1/user/orders",
+     *     summary="Create a new order from the authenticated user's cart",
+     *     tags={"Orders"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="Order created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Order")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cart not found"
+     *     )
+     * )
+     */
+    public function create()
+    {
+        // Check for cart existence
+        if (!Auth::user()->hasCart()) {
+            return $this->sendError('Not found');
+        }
+
+        // Generate data
+        $cart = Auth::user()->cart;
+        $order = Auth::user()->orders()->create([
+            'barcode' => fake()->iban(fake()->countryCode()),
+            'subtotal' => $cart->total(),
+            'total' => $cart->total(),
+            'status' => 'REQUESTED'
+        ]);
+        foreach ($cart->variants as $item) {
+            $order->variants()->attach($item, [
+                'quantity' => $item->pivot->quantity,
+            ]);
+        }
+        $cart->variants()->detach();
+        $cart->delete();
+
+        return $this->sendResponse(OrderResource::make($order), code: 201);
+    }
+
+    /**
      * @OA\Get(
-     *     path="/api/v1/orders/{id}",
+     *     path="/api/v1/user/orders/{id}",
      *     summary="Get order details by ID",
      *     tags={"Orders"},
      *     security={{"sanctum": {}}},
@@ -102,7 +149,7 @@ class OrderController extends BaseController
 
     /**
      * @OA\Put(
-     *     path="/api/v1/orders/{id}",
+     *     path="/api/v1/user/orders/{id}",
      *     summary="Update shipping address for an order",
      *     tags={"Orders"},
      *     security={{"sanctum": {}}},
@@ -162,8 +209,8 @@ class OrderController extends BaseController
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/v1/orders/{id}/place",
+     * @OA\Patch(
+     *     path="/api/v1/user/orders/{id}/place",
      *     summary="Place an order",
      *     tags={"Orders"},
      *     security={{"sanctum": {}}},

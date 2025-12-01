@@ -11,17 +11,78 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Cart",
+ *     description="API Endpoints for Shopping Cart"
+ * )
+ */
 class CartController extends BaseController
 {
+    /**
+     * @OA\Get(
+     *     path="/api/v1/cart",
+     *     summary="Get the authenticated user's cart",
+     *     tags={"Cart"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/Cart")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cart not found"
+     *     )
+     * )
+     */
     public function index()
     {
-        $cart = Cart::whereBelongsTo(Auth::user());
+        $cart = Auth::user()->cart;
         if (!isset($cart)) {
             return $this->sendError('Not found');
         }
         return $this->sendResponse(CartResource::make($cart));
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/v1/cart",
+     *     summary="Add items to the authenticated user's cart",
+     *     tags={"Cart"},
+     *     security={{"sanctum": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="items",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="variant", type="integer", example=1),
+     *                     @OA\Property(property="quantity", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Items added to cart successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Cart")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
     public function add(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -52,7 +113,42 @@ class CartController extends BaseController
         return $this->sendResponse(CartResource::make($cart), code: 201);
     }
 
-    public function remove(Request $request)
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/cart",
+     *     summary="Delete items from the authenticated user's cart",
+     *     tags={"Cart"},
+     *     security={{"sanctum": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="items",
+     *                 type="array",
+     *                 @OA\Items(type="integer", example=1)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Items deleted from cart successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Cart")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cart not found"
+     *     )
+     * )
+     */
+    public function delete(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'items' => 'required|array|min:1',
@@ -74,22 +170,81 @@ class CartController extends BaseController
         return $this->sendResponse(CartResource::make($cart));
     }
 
-    public function edit(Request $request)
+    /**
+     * @OA\Put(
+     *     path="/api/v1/cart/items/{item}",
+     *     summary="Edit the quantity of a variant in the authenticated user's cart",
+     *     tags={"Cart"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Parameter(
+     *         name="item",
+     *         in="path",
+     *         description="Variant ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="quantity", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Variant quantity updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/Cart")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cart not found"
+     *     )
+     * )
+     */
+    public function edit(Variant $variant, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'variant' => 'required|int',
-            'quantity' => 'required|int'
+            'quantity' => 'required|int',
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation error', $validator->errors(), 400);
         }
+
         $cart = Auth::user()->cart;
-        $cart->variants()->updateExistingPivot($request->variant, [
-            'quantity' => $request->quantity
+
+        if (!isset($cart)) {
+            return $this->sendError('Not found');
+        }
+
+        $cart->variants()->updateExistingPivot($variant->id, [
+            'quantity' => $validator->getValue('quantity'),
         ]);
         return $this->sendResponse(CartResource::make($cart));
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/cart/",
+     *     summary="Clear the authenticated user's cart",
+     *     tags={"Cart"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cart cleared successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
+     */
     public function destroy()
     {
         Auth::user()->cart->variants()->detach();
@@ -97,28 +252,4 @@ class CartController extends BaseController
         return $this->sendResponse('Done');
     }
 
-    public function checkout()
-    {
-        // Check for cart existence
-        if (!Auth::user()->hasCart()) {
-            return $this->sendError('Not found');
-        }
-
-        // Generate data
-        $cart = Auth::user()->cart;
-        $order = Auth::user()->orders()->create([
-            'barcode' => fake()->iban(fake()->countryCode()),
-            'subtotal' => $cart->total(),
-            'total' => $cart->total(),
-            'status' => 'REQUESTED'
-        ]);
-        foreach ($cart->variants as $item) {
-            $order->variants()->attach($item, [
-                'quantity' => $item->pivot->quantity,
-            ]);
-        }
-        $this->destroy();
-
-        return $this->sendResponse(OrderResource::make($order), code: 201);
-    }
 }
