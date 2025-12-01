@@ -2,11 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\User;
-use App\Models\Variant;
-use App\Models\VariantQuantityChange;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
@@ -17,31 +13,11 @@ class ProductsSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->has(
-            Product::factory(15)
-                ->has(
-                    ProductImage::factory(5)
-                        ->sequence(fn (Sequence $sequence) => ['order' => $sequence->index % 5])
-                )
-                ->has(
-                    Variant::factory(3)
-                        ->has(
-                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
-                                'amount' => rand(50, 80)
-                            ])->for(User::findOrFail(1))
-                        )
-                        ->has(
-                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
-                                'amount' => rand(-40, -5)
-                            ])->for(User::findOrFail(1))
-                        )
-                        ->has(
-                            VariantQuantityChange::factory()->state(fn (array $attributes) => [
-                                'amount' => rand(10, 40)
-                            ])->for(User::findOrFail(1))
-                        )
-                )
-            )
+        User::factory()->count(50)
+            ->state(new Sequence(
+                fn (Sequence $sequence) => ['name' => 'Vendor '.$sequence->index],
+            ))
+            ->hasProducts(5)
             ->create();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ProductType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,14 +20,9 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->words(asText: true),
             'description' => fake()->text(),
-            'category' => fake()->randomElement([
-                'ELECTRONICS',
-                'FASHION',
-                'HOME',
-                'BEAUTY',
-                'SPORTS',
-                'TOYS',
-            ]),
+            'type_id' => fake()->optional()->randomElement(
+                ProductType::pluck('id')->toArray()
+            ),
         ];
     }
 }

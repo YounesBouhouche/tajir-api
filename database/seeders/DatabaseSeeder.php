@@ -18,8 +18,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'younes.bouhouche12@gmail.com',
             'password' => 'iu_1EBgzRh5jhlV',
         ]);
-        (new UserProductsSeeder())->run();
-        (new UserAddressesSeeder())->run();
-        (new ProductsSeeder())->run();
+        $this->call([
+            UserAddressesSeeder::class,
+            ProductTypesSeeder::class,
+            ProductsSeeder::class,
+        ]);
     }
 }
