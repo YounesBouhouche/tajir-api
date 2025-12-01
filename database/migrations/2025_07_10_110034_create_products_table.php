@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Category;
+use App\Models\ProductType;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,15 +18,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->enum('category', [
-                'ELECTRONICS',
-                'FASHION',
-                'HOME',
-                'BEAUTY',
-                'SPORTS',
-                'TOYS',
-            ])->nullable();
+            $table->foreignIdFor(ProductType::class, 'type_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->json('attributes')->nullable();
             $table->timestamps();
         });
     }

@@ -16,8 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
-            $table->float('promoted_price')->nullable();
-            $table->dateTime('promoted_price_end')->nullable();
+            $table->float('promotional_price')->nullable();
+            $table->dateTime('promotional_price_start')->nullable();
+            $table->dateTime('promotional_price_end')->nullable();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
