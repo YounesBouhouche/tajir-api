@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Controllers\RatingController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +15,7 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -24,7 +24,9 @@ class ProductResource extends JsonResource
             'max_price' => $this->maxPrice(),
             'quantity' => $this->quantity(),
             'variants' => new VariantCollection($this->variants),
-            'category' => $this->category,
+            'category' => $this->productType?->category,
+            'type' => new ProductTypeResource($this->productType),
+            'attributes' => $this->attributes,
             'product_images' => ProductImageCollection::make($this->productImages),
             'is_favorite' => Auth::user() !== null ? Auth::user()->isFavorite($this->id) : false,
             'rating' => $this->rating(),
